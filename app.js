@@ -3,24 +3,34 @@ app.js - Simulador de Crédito
 Proyecto Coderhouse, Entrega 1
 Ezequiel A. Verón
 */
+
+//Definición de parámetros del Simulador
 const interes = 0.6;
+const edadMinima = 18;
+const edadMaxima = 100;
+const impMinimoPermitido = 10000;
+const impMaximoPermitido = 1000000;
+const cuotasMinimas = 12;
+const cuotasMaximas = 70;
+
+//Lógica del Simulador
 const nombre = prompt("Bienvenido al Simulador de Créditos\nPor favor, ingresa tu nombre");
-if (nombre == null || nombre == "") {
+if (!validarNombre(nombre)) {
     alert("No has ingresado un nombre.\nPor favor, vuelve a intentarlo actualizando la página");
     $("#subtituloH2").html("No hemos podido calcular tu préstamo ya que no ingresaste tu Nombre");
 } else {
-    const edad = parseInt(prompt("Hola " + nombre + "\nIntroduce por favor tu edad\nMínimo: 18\nMáximo: 100"));
-    if (edad <= 17 || isNaN(edad) || edad > 100) {
+    const edad = parseInt(prompt("Hola " + nombre + "\nIntroduce por favor tu edad\nMínimo: " + edadMinima + "\nMáximo: " + edadMaxima));
+    if (!validarEdad(edad)) {
         alert("No cumples con los requisitos de edad previstos.\nPor razones legales, no podemos otorgarte un crédito");
         $("#subtituloH2").html("No hemos podido calcular tu préstamo ya que no cumples los requisitos legales");
     } else {
-        const solicitado = parseFloat(prompt("Ingresa el dinero que necesitas\nPuedes pedir desde $10.000 hasta $1.000.000"));
-        if (solicitado < 10000 || solicitado > 1000000 || isNaN(solicitado)) {
+        const solicitado = parseFloat(prompt("Ingresa el dinero que necesitas\nPuedes pedir desde $" + impMinimoPermitido + " hasta $"+ impMaximoPermitido));
+        if (!validarImporteSolicitado(solicitado)) {
             alert("El importe que has solicitado no se encuentra en el rango correcto.\nPor favor, vuelve a intentarlo");
             $("#subtituloH2").html("No hemos podido calcular tu préstamo ya que no podemos darte el dinero solicitado");
         } else {
-            const meses = parseInt(prompt("Por último, elige la cantidad de cuotas\nEl mínimo de cuotas es de 12 y el máximo de 60"));
-            if (meses < 12 || meses > 60 || isNaN(meses)) {
+            const meses = parseInt(prompt("Por último, elige la cantidad de cuotas\nEl mínimo de cuotas es de " + cuotasMinimas + " y el máximo de " + cuotasMaximas));
+            if (!validarCuotas(meses)) {
                 alert("Las cuotas que especificaste no son correctas.\nPor favor, vuelve a intentarlo.");
                 $("#subtituloH2").html("No hemos podido calcular tu préstamo ya que la cantidad de cuotas elegidas no son válidas");
             } else {
@@ -36,6 +46,8 @@ if (nombre == null || nombre == "") {
         }
     }
 }
+
+//Renderizado HTML
 function armarTablaHTMLCuotas(solicitado, capitalCuota, interesCuota, meses) {
     let tablaCuotas = "<table class='table table-bordered table-striped'>";
     tablaCuotas += "<thead><tr><th>Cuota</th><th>Capital Adeudado</th><th>Interés Adeudado</th></tr></thead><tbody>";
@@ -62,4 +74,34 @@ function armarTablaResumen(nombre, edad, solicitado, totalPrestamo, totalInteres
     tablaResumen += "<tr><td>Interés por Cuota</td><td><strong>$" + interesCuota.toFixed(2) + "</strong></td></tr>";
     tablaResumen += "<tr><td>Valor total de Cuota</td><td><strong>$" + valorCuota.toFixed(2) + "</strong></td></tr></tbody></table>";
     return tablaResumen;
+}
+
+//Validaciones
+function validarNombre(nombre){
+    if (nombre == null || nombre == "") {
+        return false;
+    } else {
+        return true;
+    }
+}
+function validarEdad(edad) {
+    if (edad <= edadMinima || isNaN(edad) || edad > edadMaxima) {
+        return false;
+    } else {
+        return true;
+    }
+}
+function validarImporteSolicitado(solicitado) {
+    if (solicitado < impMinimoPermitido || solicitado > impMaximoPermitido || isNaN(solicitado)) {
+        return false;
+    } else {
+        return true;
+    }
+}
+function validarCuotas(meses) {
+    if(meses < cuotasMinimas || meses > cuotasMaximas || isNaN(meses)) {
+        return false;
+    } else {
+        return true;
+    }
 }
