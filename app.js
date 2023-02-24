@@ -85,7 +85,7 @@ function validarNombre(nombre){
     }
 }
 function validarEdad(edad) {
-    if (edad <= edadMinima || isNaN(edad) || edad > edadMaxima) {
+    if (edad < edadMinima || isNaN(edad) || edad > edadMaxima) {
         return false;
     } else {
         return true;
